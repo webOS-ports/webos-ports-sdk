@@ -14,7 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-checkdevice() {
+testadb() {		## Verify ADB exists
+    if hash adb 2>/dev/null; then
+    	:
+    else
+        echo "[!] adb not found in your path. Please install adb. Aborting."
+        exit 2
+    fi
+}
+
+checkdevice() {	## Verify the device is connected and running webOS
 	device_not_found="List of devices attached"
 	check_device=`adb devices | tail -2 | head -1 | cut -f 1 | sed 's/ *$//g'`
  
@@ -45,6 +54,7 @@ gatherdiag() {	## Generate diagnostics
 
 main() {		## Main subroutine
 	echo "[#] webOS-ports diagnostics by HaDAk"
+	testadb
 	checkdevice
 	gatherdiag
 }
