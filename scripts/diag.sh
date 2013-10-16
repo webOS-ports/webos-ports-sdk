@@ -14,30 +14,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-testadb() {		## Verify ADB exists
-    if hash adb 2>/dev/null; then
-    	:
-    else
-        echo "[!] adb not found in your path. Please install adb."
-        exit 1
-    fi
+checkdevice() {
+	device_not_found="List of devices attached"
+	check_device=`adb devices | tail -2 | head -1 | cut -f 1 | sed 's/ *$//g'`
+ 
+	if [[ ${check_device} == ${device_not_found} ]]; then
+		echo "[!] No device found. Aborting."
+		exit 2
+	else
+		adb_test=$(adb shell ls -1 /usr/sbin|grep luna-next)
+		if [[ -z "$adb_test" ]]; then
+			echo "[!] Connected device is not running webOS. Aborting."
+			exit 2
+		fi
+	fi
 }
 
 gatherdiag() {	## Generate diagnostics
 	echo "[->] Gathering diagnostic files..."
-	mkdir -p ./diag`date +%d%m%Y%H%M%S`
-	adb shell journalctl --no-pager > ./diag`date +%d%m%Y%H%M%S`/journalctl
-	adb shell opkg list > ./diag`date +%d%m%Y%H%M%S`/opkg
-	adb shell uname -a > ./diag`date +%d%m%Y%H%M%S`/uname
-	adb shell cat /proc/cmdline > ./diag`date +%d%m%Y%H%M%S`/cmdline
-	tar czf diag-`date +%d%m%Y%H%M%S`.tgz ./diag`date +%d%m%Y%H%M%S`/*
-	rm -rf ./diag`date +%d%m%Y%H%M%S`
-	echo "[->] Diagnostics saved to diag-`date +%d%m%Y%H%M%S`.tgz."
+	path=diag-`date +%d%m%Y%H%M%S`
+	mkdir -p $path
+	adb shell journalctl --no-pager > $path/journalctl
+	adb shell opkg list > $path/opkg
+	adb shell uname -a > $path/uname
+	adb shell cat /proc/cmdline > $path/cmdline
+	tar czf $path.tgz $path/*
+	rm -rf $path
+	echo "[->] Diagnostics saved to $path.tgz."
 }
 
 main() {		## Main subroutine
 	echo "[#] webOS-ports diagnostics by HaDAk"
-	testadb
+	checkdevice
 	gatherdiag
 }
 
