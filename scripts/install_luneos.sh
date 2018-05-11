@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Copyright (c) 2013 Hans Kokx
+# Copyright (c) 2018 Herman van Hazendonk <github.com@herrie.org>
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +22,7 @@ logo() {
          _    _____ / /  / __ \/ __/    
         | |/|/ / -_) _ \/ /_/ /\ \      
         |__,__/\__/_.__/\____/___/            webOS-ports installer
-           ___           __                   Google Nexus 7 (2012)
+           ___           __                   
           / _ \___  ____/ /____         
          / ___/ _ \/ __/ __(_-<                            by HaDAk
         /_/   \___/_/  \__/___/         
@@ -39,7 +40,7 @@ Usage: $0 <options>
 EOF
 }
 
-tagline="[#] webOS-ports installer for the Nexus 7 (2012) by HaDAk"
+tagline="[#] webOS-ports LuneOS installer by HaDAk"
 getdev=`adb shell getprop ro.product.device`
 build=""
 verbose="false"
@@ -104,9 +105,9 @@ comfortable with alpha-quality software, and any issues that may arise from
 trying to install and use alpha-quality software, please DO NOT use this
 program.
 
-This installer assumes that your Nexus 7 (2012) is accessable via adb, and your
+This installer assumes that your device is accessable via adb, and your
 bootloader is unlocked.  It also assumes that you currently have ClockworkMod
-installed. Other custom recoveries have not been tested, and are not guaranteed
+or TWRP installed. Other custom recoveries have not been tested, and are not guaranteed
 to work with this installer.
 
 '
@@ -134,7 +135,7 @@ read -p "Press [Enter] key to continue..."
 clear
 
 echo "[?] Do you wish to accept full liability of damages"
-echo "[?] and install webOS-ports on your Nexus 7 (2012)?"
+echo "[?] and install LuneOS on your device?"
 read -p "[y/n]: "
 if [ $REPLY != "y" ]; then
   echo "[!] Installation aborted by user. Goodbye."
@@ -314,7 +315,7 @@ install() {
   read -p "[!] Once the install is complete, press [Enter] to continue."
 
   if [[ $skipkernel == "true" ]]; then
-    echo "[*] webOS has been successfully installed."
+    echo "[*] LuneOS has been successfully installed."
     elif [[ $skipkernel == "false" ]]; then
     adb reboot bootloader 2>/dev/null
     sleep 3
@@ -325,10 +326,10 @@ install() {
       spinner $!
       fastboot reboot 2>/dev/null
       echo ""
-      echo "[*] webOS has been successfully installed."
+      echo "[*] LuneOS has been successfully installed."
     else
       fastboot flash boot zImage-grouper.fastboot 2>/dev/null
-      echo "[*] webOS has been successfully installed."
+      echo "[*] LuneOS has been successfully installed."
       fastboot reboot 2>/dev/null
     fi
     
@@ -349,7 +350,7 @@ cleanup() {
 }
 
 finish() {
-  echo "[*] All done! Enjoy webOS :) -HaDAk"
+  echo "[*] All done! Enjoy LuneOS :) -HaDAk"
 }
 
 main() {

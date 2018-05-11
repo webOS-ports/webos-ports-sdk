@@ -10,7 +10,7 @@ Generate a diagnostics package:
 ```
 scripts/diag.sh
 ```
-Install webOS-Ports on your Google Nexus 7:
+Install LuneOS on your device:
 ```
-scripts/install_webos.sh
+scripts/install_luneos.sh
 ```
