@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This installer attempts to detect the webOS SDK, then augment it by 
-# adding scripts to provide similar commands for LuneOS. If those scripts
-# are already present, they'll be overwritten to allow for in-place
+# This installer for Linux attempts to detect the webOS SDK, then augment
+# it by adding scripts to provide similar commands for LuneOS. If those 
+# scripts are already present, they'll be overwritten to allow for in-place
 # upgrades or bug fixes.
 
 #Check for sufficient privileges

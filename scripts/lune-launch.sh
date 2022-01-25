@@ -3,6 +3,12 @@
 # Try to launch app with luna via adb
 # Then follow logs
 
+if [ "$1" = "" ]; then
+    echo lune-launch: missing arguments
+    echo Pass the appid of the previously installed app you want to run.
+    echo eg: lune-run com.yourdomain.yourapp
+    exit
+fi
 IPKNAME=$1
 ARG=$2
 

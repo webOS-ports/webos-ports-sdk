@@ -6,6 +6,12 @@
 # Run the app on the device, using luna-send commands over adb
 # Watch the logs, using shell commands over adb
 
+if [ "$1" = "" ]; then
+    echo lune-run: missing arguments
+    echo Pass the directory of the app code to run as the first -- and only -- argument.
+    echo eg: lune-run ~/myapp
+    exit
+fi
 APPFOLDER=$1
 
 # Make sure there's a device to run on

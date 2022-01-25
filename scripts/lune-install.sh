@@ -6,6 +6,12 @@
 # Run the app on the device, using luna-send commands over adb
 # Watch the logs, using shell commands over adb
 
+if [ "$1" = "" ]; then
+    echo lune-install: missing arguments
+    echo Pass the directory of the app code to install as the first -- and only -- argument.
+    echo eg: lune-install ~/myapp
+    exit
+fi
 IPK=$1
 
 # Make sure there's a device to run on
