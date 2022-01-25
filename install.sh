@@ -42,7 +42,7 @@ chmod +x $PALM_SCRIPTS/*.sh
 for file in $PALM_SCRIPTS/*.sh; do
     ofname=$(basename "$file")
     nfname=$(basename "$file" .sh)
-    echo "ln -s /usr/local/bin/$nfname $PALM_SCRIPTS/$ofname -f"
+    echo "Adding $nfname"
     ln -s $PALM_SCRIPTS/$ofname /usr/local/bin/$nfname -f
 done
 echo

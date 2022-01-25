@@ -7,7 +7,7 @@ IPKNAME=$1
 # Make sure there's a device to run on
 devfound=false
 adb get-state 1>/dev/null 2>&1 && devfound=true || devfound=false
-if [ "$devfound" -eq "false" ]; then
+if [ "$devfound" = "false" ]; then
     echo lune-log: no devices found via adb
     exit
 fi

@@ -11,12 +11,12 @@ APPFOLDER=$1
 # Make sure there's a device to run on
 devfound=false
 adb get-state 1>/dev/null 2>&1 && devfound=true || devfound=false
-if [ "$devfound" -eq "false" ]; then
+if [ "$devfound" = "false" ]; then
     echo lune-run: no devices found via adb
     exit
 fi
 
-# Get SDK to package app
+# Ask SDK to package app
 rm /tmp/*.ipk 2>null
 palm-package $APPFOLDER -o /tmp
 
@@ -30,11 +30,11 @@ if [ -z "${ipk:-}" ]; then
     exit
 fi
 
-# Install IPK
+# Install IPK that was just made
 echo
 lune-install $ipk
 
-# Follow logs
+# Run the App and follow logs
 ipkfile=$(basename "$ipk")
 ipkname="$(echo $ipkfile | cut -d'_' -f1)"
 echo
