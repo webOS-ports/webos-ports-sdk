@@ -88,15 +88,15 @@ EXAMPLES:
     Perform a build, create a VM, attach the most recent output and then start it:
 
         $ make
-        $ ./webosvbox create start
+        $ ./lune-emulator create start
 
     Attach the latest image to an existing machine, start it, then ssh in
 
-        $ ./webosvbox attach start ssh
+        $ ./lune-emulator attach start ssh
 
     Create a virtual machine, with a different name and ssh port
 
-        $ ./webosvbox -n testvm -p 6622 create
+        $ ./lune-emulator -n testvm -p 6622 create
 
 SEE ALSO:
     VBoxManage(1)
@@ -111,7 +111,7 @@ END
 function setDefaults {
     if [ "$VMIMAGESTEM" = "" ]
     then
-        VMIMAGESTEM=webos-ports-dev
+        VMIMAGESTEM=LuneOS
     fi
 
     if [ "$WEBOSVBOX_VM_NAME" != "" ]
