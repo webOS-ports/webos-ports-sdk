@@ -7,6 +7,8 @@ SDK tools for developing apps for LuneOS, either on an emulator, or a real devic
 
 Installation is optional -- the scripts can run from anywhere. However, some scripts depend on the original webOS SDK, so the installer is checks if it is present, and creates convention-consistent commands in the same install directories. The webOS SDK can be downloaded from sdk.webosarchive.com.
 
+LuneOS development also requires Android developer tools, especially adb.
+
 + Clone this repo
 + Make the installer executable. 
     + On *nix systems (including Mac): `chmod +x install.sh`

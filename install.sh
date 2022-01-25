@@ -12,7 +12,19 @@ if [ "$EUID" -ne 0 ]; then
   read -rsp $'Press any key to continue . . .\n' -n1 key
   exit
 fi
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 PALM_SCRIPTS=/opt/PalmSDK/0.1/bin
+
+#Check for ADB
+if ! hash adb 2>/dev/null
+then
+    echo "adb was not found in PATH. Please install adb first."
+    echo "Download from developer.android.com"
+    echo
+    read -rsp $'Press any key to continue . . .\n' -n1 key
+    exit
+fi
+
 #Check for PalmSDK
 if [ ! -d "$PALM_SCRIPTS" ]; then
   echo "Palm SDK not found. Please install the PalmSDK first."
@@ -21,17 +33,18 @@ if [ ! -d "$PALM_SCRIPTS" ]; then
   read -rsp $'Press any key to continue . . .\n' -n1 key
   exit
 fi
+
+#Patch in new stuff
 echo Patching Palm webOS SDK to add LuneOS support . . .
 echo
-yes | cp ./scripts/* $PALM_SCRIPTS
+yes | cp $DIR/scripts/* $PALM_SCRIPTS
 chmod +x $PALM_SCRIPTS/*.sh
 for file in $PALM_SCRIPTS/*.sh; do
     ofname=$(basename "$file")
     nfname=$(basename "$file" .sh)
-    #echo "$nfname"
-    echo "ln -s /usr/local/bin/$nfname $PALM_SCRIPTS/$ofname"
-    ln -s $PALM_SCRIPTS/$ofname /usr/local/bin/$nfname
-
+    echo "ln -s /usr/local/bin/$nfname $PALM_SCRIPTS/$ofname -f"
+    ln -s $PALM_SCRIPTS/$ofname /usr/local/bin/$nfname -f
 done
+echo
 
 echo Done! Install Completed
