@@ -7,6 +7,15 @@
 # Watch the logs, using shell commands over adb
 
 APPFOLDER=$1
+
+# Make sure there's a device to run on
+devfound=false
+adb get-state 1>/dev/null 2>&1 && devfound=true || devfound=false
+if [ "$devfound" -eq "false" ]; then
+    echo lune-run: no devices found via adb
+    exit
+fi
+
 # Get SDK to package app
 rm /tmp/*.ipk 2>null
 palm-package $APPFOLDER -o /tmp
@@ -16,27 +25,17 @@ unset -v ipk
 for file in "/tmp"/*.ipk; do
     [[ $file -nt $ipk ]] && ipk=$file
 done
-
 if [ -z "${ipk:-}" ]; then 
     echo "lune-run: cannot continue, palm-package did not produce a deployable ipk"
     exit
 fi
 
+# Install IPK
 echo
-# Figure all the names we need and tidy up
+lune-install $ipk
+
+# Follow logs
 ipkfile=$(basename "$ipk")
 ipkname="$(echo $ipkfile | cut -d'_' -f1)"
-adb shell "rm /tmp/*.ipk 2>null"
-
-# Push and install the app
-echo pushing package $ipk
-adb push $ipk /tmp
-echo
-echo installing $ipkname
-# To install a System app:
-#   adb shell "opkg install --force-reinstall --force-downgrade /tmp/$ipkfile && rm /tmp/*.ipk"
-adb shell "/usr/bin/luna-send -n 6 luna://com.palm.appinstaller/installNoVerify '{\"subscribe\":true, \"target\": \"/tmp/$ipkfile\"}'"
-sleep 1
-
 echo
 lune-log $ipkname
