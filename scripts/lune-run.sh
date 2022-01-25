@@ -8,6 +8,7 @@
 
 APPFOLDER=$1
 # Get SDK to package app
+rm /tmp/*.ipk 2>null
 palm-package $APPFOLDER -o /tmp
 
 # Find what was just made
@@ -38,9 +39,4 @@ adb shell "/usr/bin/luna-send -n 6 luna://com.palm.appinstaller/installNoVerify 
 sleep 1
 
 echo
-# Launch the app
-echo launching $ipkname
-adb shell "/usr/bin/luna-send -n 1 -f luna://com.palm.applicationManager/launch '{ \"id\": \"$ipkname\" }'"
-# Tracing
-echo following logs
-adb shell "journalctl -f -l -u luna-webappmanager"
+lune-log $ipkname
