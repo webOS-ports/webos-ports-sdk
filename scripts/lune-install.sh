@@ -31,8 +31,9 @@ adb shell "rm /tmp/*.ipk 2>null"
 echo pushing package $IPK
 adb push $IPK /tmp
 echo
-echo installing $ipkname
+echo (re)installing $ipkname
 # To install a System app:
 #   adb shell "opkg install --force-reinstall --force-downgrade /tmp/$ipkfile && rm /tmp/*.ipk"
+adb shell "/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$IPKNAME\", \"subscribe\": true }'" 2>&1
 adb shell "/usr/bin/luna-send -n 6 luna://com.palm.appinstaller/installNoVerify '{\"subscribe\":true, \"target\": \"/tmp/$ipkfile\"}'"
 sleep 1
