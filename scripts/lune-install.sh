@@ -14,6 +14,17 @@ if [ "$1" = "" ]; then
 fi
 IPK=$1
 DEVICE=1
+ADDRESS=localhost
+PORT=5522
+
+if [ "$2" != "" ]; then
+    ADDRESS=$2
+    PORT=22
+fi
+
+if [ "$3" != "" ]; then
+    PORT=$3
+fi
 
 # Make sure there's a device to run on
 devfound=false
@@ -32,12 +43,12 @@ function remoteShellCmd() {
     if [ $DEVICE -eq 1 ]; then
         adb shell $command
     else
-        ssh root@localhost -p 5522 $command
+        ssh root@$ADDRESS -p $PORT $command
     fi
 }
 
 echo "prepping install service"
-command="systemctl restart appinstalld"
+command="systemctl restart appinstalld2"
 remoteShellCmd $DEVICE $command
 sleep 1
 
@@ -46,8 +57,8 @@ echo "removing package $ipkname"
 # which command is right?
 command="/usr/bin/luna-send -n 10 -f luna://com.webos.appInstallService/remove '{ \"id\": \"$ipkname\", \"subscribe\": true }'"
 remoteShellCmd $DEVICE, $command
-command="/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$ipkname\", \"subscribe\": true }'"
-remoteShellCmd $DEVICE, $command
+#command="/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$ipkname\", \"subscribe\": true }'"
+#remoteShellCmd $DEVICE, $command
 # If they asked to remove an app, then we're done
 if [ "$2" = "-r" ]; then
     exit
@@ -64,7 +75,7 @@ command="$IPK"
 if [ $DEVICE -eq 1 ]; then
     adb push $command /tmp
 else
-    scp -P 5522 $command root@localhost:/tmp
+    scp -P $PORT $command root@$ADDRESS:/tmp
 fi
 echo
 sleep 1

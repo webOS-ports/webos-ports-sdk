@@ -14,12 +14,23 @@ if [ "$1" = "" ]; then
 fi
 APPFOLDER=$1
 DEVICE=1
+ADDRESS=localhost
+PORT=5522
+
+if [ "$2" != "" ]; then
+    ADDRESS=$2
+    PORT=22
+fi
+
+if [ "$3" != "" ]; then
+    PORT=$3
+fi
 
 # Make sure there's a device to run on
 devfound=false
 adb get-state 1>/dev/null 2>&1 && devfound=true || devfound=false
 if [ "$devfound" = "false" ]; then
-    echo lune-run: no devices found via adb, assuming emulator
+    echo lune-run: no devices found via adb, assuming emulator at $ADDRESS:$PORT
     DEVICE=0
 fi
 
@@ -28,7 +39,7 @@ function remoteShellCmd() {
     if [ $DEVICE -eq 1 ]; then
         adb shell $command
     else
-        ssh root@localhost -p 5522 $command
+        ssh root@$ADDRESS -p $PORT $command
     fi
 }
 
@@ -48,7 +59,7 @@ fi
 
 # Install IPK that was just made
 echo
-lune-install $ipk
+lune-install $ipk $2 $3
 
 # Run the App and follow logs
 ipkfile=$(basename "$ipk")
@@ -57,4 +68,4 @@ echo launching $ipkname
 command="/usr/bin/luna-send -n 1 -f luna://com.palm.applicationManager/launch '{ \"id\": \"$ipkname\" }'" 
 remoteShellCmd $DEVICE, $command
 echo
-#lune-log $ipkname
+lune-log . $2 $3
