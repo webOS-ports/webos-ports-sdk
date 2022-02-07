@@ -52,18 +52,15 @@ command="systemctl restart appinstalld2"
 remoteShellCmd $DEVICE $command
 sleep 1
 
-# At least for now, we must remove an app before we re-install it
-echo "removing package $ipkname"
-# which command is right?
-command="/usr/bin/luna-send -n 10 -f luna://com.webos.appInstallService/remove '{ \"id\": \"$ipkname\", \"subscribe\": true }'"
-remoteShellCmd $DEVICE, $command
-#command="/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$ipkname\", \"subscribe\": true }'"
-#remoteShellCmd $DEVICE, $command
-# If they asked to remove an app, then we're done
 if [ "$2" = "-r" ]; then
+    echo "removing package $ipkname"
+    command="/usr/bin/luna-send -n 10 -f luna://com.webos.appInstallService/remove '{ \"id\": \"$ipkname\", \"subscribe\": true }'"
+    remoteShellCmd $DEVICE, $command
+    command="/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$ipkname\", \"subscribe\": true }'"
+    # If they asked to remove an app, then we're done
+    remoteShellCmd $DEVICE, $command
     exit
 fi
-sleep 1
 
 # Tidy up
 command="rm /tmp/*.ipk 2>null"
@@ -85,9 +82,5 @@ echo "re/installing $ipkname"
 #   adb shell "opkg install --force-reinstall --force-downgrade /tmp/$ipkfile && rm /tmp/*.ipk"
 # new command, per Herrie
 command="/usr/bin/luna-send -n 1 luna://com.webos.appInstallService/install  '{\"subscribe\":true, \"id\": \"$ipkname\", \"ipkUrl\": \"/tmp/$ipkfile\"}'"
-remoteShellCmd $DEVICE $command
-sleep 1
-echo "scanning for new app"
-command="luna-send -n 1 luna://com.palm.applicationManager/rescan '{}'"
 remoteShellCmd $DEVICE $command
 sleep 1
