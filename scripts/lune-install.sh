@@ -55,6 +55,7 @@ sleep 1
 if [ "$2" = "-r" ]; then
     echo "removing package $ipkname"
     command="/usr/bin/luna-send -n 10 -f luna://com.webos.appInstallService/remove '{ \"id\": \"$ipkname\", \"subscribe\": true }'"
+    # Herrie: Which command should we use?
     remoteShellCmd $DEVICE, $command
     command="/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$ipkname\", \"subscribe\": true }'"
     # If they asked to remove an app, then we're done
