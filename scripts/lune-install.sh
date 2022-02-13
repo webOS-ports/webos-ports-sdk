@@ -55,10 +55,6 @@ sleep 1
 if [ "$2" = "-r" ]; then
     echo "removing package $ipkname"
     command="/usr/bin/luna-send -n 10 -f luna://com.webos.appInstallService/remove '{ \"id\": \"$ipkname\", \"subscribe\": true }'"
-    # Herrie: Which command should we use?
-    remoteShellCmd $DEVICE, $command
-    command="/usr/bin/luna-send -n 10 -f luna://com.palm.appinstaller/remove '{ \"packageName\": \"$ipkname\", \"subscribe\": true }'"
-    # If they asked to remove an app, then we're done
     remoteShellCmd $DEVICE, $command
     exit
 fi
@@ -81,7 +77,6 @@ sleep 1
 echo "re/installing $ipkname"
 # To install a System app:
 #   adb shell "opkg install --force-reinstall --force-downgrade /tmp/$ipkfile && rm /tmp/*.ipk"
-# new command, per Herrie
-command="/usr/bin/luna-send -n 1 luna://com.webos.appInstallService/install  '{\"subscribe\":true, \"id\": \"$ipkname\", \"ipkUrl\": \"/tmp/$ipkfile\"}'"
+command="/usr/bin/luna-send -n 6 luna://com.webos.appInstallService/install  '{\"subscribe\":true, \"id\": \"$ipkname\", \"ipkUrl\": \"/tmp/$ipkfile\"}'"
 remoteShellCmd $DEVICE $command
 sleep 1
