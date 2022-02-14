@@ -30,7 +30,7 @@ fi
 devfound=false
 adb get-state 1>/dev/null 2>&1 && devfound=true || devfound=false
 if [ "$devfound" = "false" ]; then
-    echo "lune-install: no devices found via adb, assuming emulator"
+    echo "lune-install: no devices found via adb, using ssh at $ADDRESS:$PORT"
     DEVICE=0
 fi
 
