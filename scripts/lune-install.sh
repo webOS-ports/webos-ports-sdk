@@ -48,7 +48,7 @@ function remoteShellCmd() {
 }
 
 echo "prepping install service"
-command="systemctl restart appinstalld2"
+command="systemctl restart appinstalld"
 remoteShellCmd $DEVICE $command
 sleep 1
 
