@@ -48,7 +48,7 @@ function remoteShellCmd() {
 }
 
 echo "prepping install service"
-command="systemctl restart appinstalld"
+command="systemctl restart appinstalld2"
 remoteShellCmd $DEVICE $command
 sleep 1
 
@@ -78,5 +78,10 @@ echo "re/installing $ipkname"
 # To install a System app:
 #   adb shell "opkg install --force-reinstall --force-downgrade /tmp/$ipkfile && rm /tmp/*.ipk"
 command="/usr/bin/luna-send -n 6 luna://com.webos.appInstallService/install  '{\"subscribe\":true, \"id\": \"$ipkname\", \"ipkUrl\": \"/tmp/$ipkfile\"}'"
+remoteShellCmd $DEVICE $command
+sleep 1
+
+echo "scanning for new app"
+command="luna-send -n 1 luna://com.palm.applicationManager/rescan '{}'"
 remoteShellCmd $DEVICE $command
 sleep 1
