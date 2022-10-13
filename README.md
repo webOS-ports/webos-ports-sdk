@@ -5,7 +5,7 @@ SDK tools for developing apps for LuneOS, either on an emulator, or a real devic
 
 ## Installation
 
-Installation is optional -- the scripts can run from anywhere. However, some scripts depend on the [original webOS SDK](http://sdk.webosarchive.com), so the installer checks if it is present, and creates convention-consistent commands in the same install directories. The webOS SDK can be downloaded from sdk.webosarchive.com.
+Installation is optional -- the scripts can run from anywhere. However, some scripts depend on the [original webOS SDK](http://sdk.webosarchive.org), so the installer checks if it is present, and creates convention-consistent commands in the same install directories. The webOS SDK can be downloaded from sdk.webosarchive.org.
 
 LuneOS development also requires Android developer tools, especially adb.
 
@@ -19,7 +19,7 @@ LuneOS development also requires Android developer tools, especially adb.
 
 The command line tools follow the patterns and conventions from the original webOS SDK -- but use the prefix `lune` to specify LuneOS:
 
-<img src="http://sdk.webosarchive.com/docs/images/palm/commands.jpg">
+<img src="http://sdk.webosarchive.org/docs/images/palm/commands.jpg">
 
 
 ### lune-generate
