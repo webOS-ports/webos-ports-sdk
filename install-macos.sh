@@ -28,7 +28,7 @@ fi
 #Check for PalmSDK
 if [ ! -d "$PALM_SCRIPTS" ]; then
   echo "Palm SDK not found. Please install the PalmSDK first."
-  echo "Download from: sdk.webosarchive.com"
+  echo "Download from: sdk.webosarchive.org"
   echo
   read -rsp $'Press any key to continue . . .\n' -n1 key
   exit

@@ -20,10 +20,10 @@ function Usage {
  cat <<-END
 
 NAME:
-    webosvbox - Manage webOS VirtualBox virtual machines
+    lune-emulator - Manage webOS VirtualBox virtual machines
 
 SYNOPSIS:
-    webosvbox [-c count] [-i image] [-n name]
+    lune-emulator [-c count] [-i image] [-n name]
               [-r ram] [-s port] [-v vram] <command>[ <command> ...]
 
     NOTE: As this is a shell script, commands must come AFTER the options
@@ -45,7 +45,7 @@ OPTIONS:
                     to the latest image in BUILD-qemux86/deploy/image
 
     -n name         Set the VM name to <name>. Do not include spaces.
-                    Defaults to "webos-image". Can be overriden by setting
+                    Defaults to "luneos-dev-emulator". Can be overriden by setting
                     the WEBOSVBOX_VM_NAME environment variable.
 
     -p port         Define the host port used for ssh port forwarding.
@@ -111,7 +111,7 @@ END
 function setDefaults {
     if [ "$VMIMAGESTEM" = "" ]
     then
-        VMIMAGESTEM=LuneOS
+        VMIMAGESTEM=luneos-dev-emulator
     fi
 
     if [ "$WEBOSVBOX_VM_NAME" != "" ]
@@ -131,10 +131,18 @@ function setDefaults {
     IDENAME=$VMIMAGESTEM
 
     # Default to the latest VMDK image and check if it's in local folder first
-    if [ -f $VMIMAGESTEM-image-qemux86.vmdk ] ; then
-        VMIMAGE="$VMIMAGESTEM-qemux86.vmdk"
+
+    unset -v USEVMDK
+    for file in "./"$VMIMAGESTEM*.vmdk; do  
+        [[ $file -nt $USEVMDK ]] && USEVMDK=$file
+    done
+    echo $USEVMDK
+
+    if [ "$USEVMDK" != "" ] ; then
+        VMIMAGE="$USEVMDK"
     else
-        echo "No image found!"
+        echo "No image found with name like: $VMIMAGESTEM*.vmdk"
+        echo "Download and unzip a release image first."
         exit 1
     fi
 }
@@ -244,8 +252,17 @@ function detachimage {
 function attachimage {
     if [ "$VMIMAGE" != "" ]
     then
+        VMFOLDER="$(vboxmanage showvminfo luneos-dev-emulator --machinereadable | grep CfgFile)"
+        VMFOLDER="$(echo $VMFOLDER | cut -d'"' -f2)"
+        VMFOLDER="${VMFOLDER%/*}"
+        echo "Moving vmdk image to $VMFOLDER"
+        mv $VMIMAGE "$VMFOLDER/"
+        VMIMAGE=$(basename "$VMIMAGE") 
         echo "Attaching vmdk image $VMIMAGE"
-        $VBM storageattach $VMNAME --storagectl "$IDENAME" --type hdd --port 0 --device 0 --medium "$VMIMAGE"
+        VMIMAGE="$VMFOLDER/$VMIMAGE"
+        echo $VMIMAGE
+        echo $VBM storageattach "$VMNAME" --storagectl "$IDENAME" --type hdd --port 0 --device 0 --medium "$VMIMAGE" --setuuid ""
+        $VBM storageattach "$VMNAME" --storagectl "$IDENAME" --type hdd --port 0 --device 0 --medium "$VMIMAGE" --setuuid ""
     fi
 }
 
